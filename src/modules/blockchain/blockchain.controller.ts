@@ -2,9 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Controller, Post, Get, Body } from '@nestjs/common';
-import { BlockchainService } from './blockchain.service';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Body,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { BlockchainService, EstadoDocumento } from './blockchain.service';
 import { GuardarDocumentoDto } from './dto/guardar-documento.dto';
 import { DocumentoDto } from './dto/documento.dto';
 
@@ -17,10 +25,18 @@ export class BlockchainController {
   @ApiOperation({ summary: 'Guardar un documento en blockchain' })
   @ApiResponse({ status: 201, description: 'Documento guardado' })
   async guardarDocumento(@Body() body: GuardarDocumentoDto) {
-    const tx = await this.blockchainService.guardarDocumento(body.hashIpfs);
+    const tx = await this.blockchainService.guardarDocumento({
+      cid: body.hashIpfs,
+      hashArchivo: body.hashArchivo,
+      proyectoId: body.proyectoId,
+      tipoDocumento: body.tipoDocumento,
+      version: body.version,
+    });
     return {
       message: 'Documento guardado en blockchain',
-      transactionHash: tx.transactionHash,
+      transactionHash: tx.receipt.hash,
+      hashArchivo: tx.hashArchivo,
+      version: tx.version,
     };
   }
 
@@ -32,10 +48,30 @@ export class BlockchainController {
     type: [DocumentoDto],
   })
   async obtenerMisDocumentos(): Promise<DocumentoDto[]> {
-    const docs = await this.blockchainService.obtenerMisDocumentos();
-    return docs.map((d: any) => ({
-      cid: d.cid,
-      timestamp: Number(d.timestamp),
-    }));
+    return this.blockchainService.obtenerMisDocumentos();
+  }
+
+  @Get('documentos/proyecto/:proyectoId')
+  @ApiOperation({ summary: 'Obtener documentos de un proyecto desde blockchain' })
+  @ApiResponse({ status: 200, type: [DocumentoDto] })
+  async obtenerPorProyecto(
+    @Param('proyectoId', ParseIntPipe) proyectoId: number,
+  ): Promise<DocumentoDto[]> {
+    return this.blockchainService.obtenerDocumentosPorProyecto(proyectoId);
+  }
+
+  @Patch('documentos/:proyectoId/:indice/estado')
+  @ApiOperation({ summary: 'Actualizar el estado de un documento on-chain' })
+  async actualizarEstado(
+    @Param('proyectoId', ParseIntPipe) proyectoId: number,
+    @Param('indice', ParseIntPipe) indice: number,
+    @Body('estado') estado: EstadoDocumento,
+  ) {
+    const receipt = await this.blockchainService.actualizarEstado(
+      proyectoId,
+      indice,
+      estado,
+    );
+    return { message: 'Estado actualizado', transactionHash: receipt.hash };
   }
 }

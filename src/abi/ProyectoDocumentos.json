@@ -9,10 +9,34 @@
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "proyectoId",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "internalType": "string",
         "name": "cid",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "hashArchivo",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ProyectoDocumentos.TipoDocumento",
+        "name": "tipoDocumento",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "version",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -25,16 +49,145 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "proyectoId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "indice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ProyectoDocumentos.EstadoDocumento",
+        "name": "nuevoEstado",
+        "type": "uint8"
+      }
+    ],
+    "name": "EstadoActualizado",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_proyectoId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_indice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum ProyectoDocumentos.EstadoDocumento",
+        "name": "_nuevoEstado",
+        "type": "uint8"
+      }
+    ],
+    "name": "actualizarEstado",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "string",
         "name": "_cid",
         "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_hashArchivo",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_proyectoId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum ProyectoDocumentos.TipoDocumento",
+        "name": "_tipoDocumento",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_version",
+        "type": "uint256"
       }
     ],
     "name": "guardarDocumento",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_proyectoId",
+        "type": "uint256"
+      }
+    ],
+    "name": "obtenerDocumentosPorProyecto",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "cid",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "hashArchivo",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "proyectoId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ProyectoDocumentos.TipoDocumento",
+            "name": "tipoDocumento",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "version",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ProyectoDocumentos.EstadoDocumento",
+            "name": "estado",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "autor",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ProyectoDocumentos.Documento[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -47,6 +200,36 @@
             "internalType": "string",
             "name": "cid",
             "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "hashArchivo",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "proyectoId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ProyectoDocumentos.TipoDocumento",
+            "name": "tipoDocumento",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "version",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ProyectoDocumentos.EstadoDocumento",
+            "name": "estado",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "autor",
+            "type": "address"
           },
           {
             "internalType": "uint256",

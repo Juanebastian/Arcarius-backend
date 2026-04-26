@@ -8,5 +8,5 @@ export default new DataSource({
   password: 'juan11',
   database: 'arcarius',
   entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
-  synchronize: true, // ⚠️ Solo en desarrollo
+  synchronize: false, // ⚠️ Solo en desarrollo
 });
